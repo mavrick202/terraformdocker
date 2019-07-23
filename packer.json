@@ -1,0 +1,47 @@
+{
+  "_comment" : "Create a AWS AMI ith AMZ Linux 2018 with Java and Tomcat",
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": ""
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "us-east-1",
+    "source_ami": "ami-0cfee17793b08a293",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "DevOpsClass-Build-{{timestamp}}",
+    "vpc_id": "vpc-04f7335cb86edaa63",
+    "subnet_id": "subnet-0e1cf8678869028e0"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "sleep 30",
+      "sudo apt update -y",
+      "sudo apt install git -y",
+      "sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common",
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+      "sudo apt-key fingerprint 0EBFCD88",
+      "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable\"",
+      "sudo apt-get update",
+      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "docker.service",
+      "destination": "/tmp/docker.service"
+    },
+    {
+        "type": "shell",
+        "inline": [
+        "sudo systemctl stop docker",
+        "sudo rm -rf /lib/systemd/system/docker.service",
+        "sudo cp /tmp/docker.service /lib/systemd/system/docker.service",
+        "sudo systemctl daemon-reload",
+        "sudo systemctl start docker"
+      ]
+    }
+]
+}
