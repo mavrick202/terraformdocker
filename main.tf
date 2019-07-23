@@ -88,14 +88,6 @@ resource "aws_security_group" "allow_all" {
     cidr_blocks     = ["0.0.0.0/0"]
     }
 }
-resource "aws_network_interface" "dockerhost" {
-  subnet_id   = "${aws_subnet.subnet1-public.id}"
-  private_ips = ["10.1.1.150"]
-
-  tags = {
-    Name = "primary_network_interface"
-  }
-}
 
 data "aws_ami" "my_ami" {
       most_recent      = true
