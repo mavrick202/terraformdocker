@@ -112,10 +112,7 @@ resource "aws_instance" "web-1" {
     subnet_id = "${aws_subnet.subnet1-public.id}"
     vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
     associate_public_ip_address = true
-    network_interface {
-    network_interface_id = "${aws_network_interface.dockerhost.id}"
-    device_index         = 0
-    }	
+    private_ip = "10.1.1.150"	
     tags = {
         Name = "Docker-Host-2"
         Env = "Prod"
